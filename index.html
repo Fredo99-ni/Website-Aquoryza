@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AQUORYZA Web App</title>
+  
+  <!-- Import Font Awesome untuk Ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Import Font Google (Poppins) agar modern -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Library Firebase v8 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <style>
+    /* VARIABEL WARNA SESUAI LOGO PKM AQUORYZA */
+    :root {
+      --bg-main: #F6F2E6; 
+      --bg-sidebar: #FFFFFF; 
+      --bg-card: #FFFFFF; 
+      --border-color: #E6DFCD; 
+      
+      --text-main: #244D2A; 
+      --text-muted: #728775; 
+      
+      --accent-green: #295730; 
+      --accent-gold: #C2A753; 
+      
+      /* Warna Kartu Data (Earthy Tones) */
+      --grad-dark-green: linear-gradient(135deg, #244D2A, #18331B);
+      --grad-light-green: linear-gradient(135deg, #759B42, #567331);
+      --grad-gold: linear-gradient(135deg, #D4BA61, #B39B50);
+      --grad-blue: linear-gradient(135deg, #3A7CA5, #295C7A);
+      --grad-brown: linear-gradient(135deg, #A07855, #805C3E);
+      --grad-purple: linear-gradient(135deg, #6C5B7B, #4C4057);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    
+    body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+    /* --- SIDEBAR --- */
+    .sidebar {
+      width: 250px;
+      background-color: var(--bg-sidebar);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border-color);
+      box-shadow: 2px 0 10px rgba(0,0,0,0.02);
+      z-index: 10;
+    }
+    
+    .logo-area { 
+      display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 700; 
+      color: var(--accent-green); margin-bottom: 40px; letter-spacing: 1px;
+    }
+    
+    .menu { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+    .menu-item {
+      display: flex; align-items: center; gap: 15px; padding: 12px 15px; border-radius: 8px; 
+      color: var(--text-muted); cursor: pointer; transition: 0.3s; font-weight: 500;
+    }
+    .menu-item.active { background-color: rgba(194, 167, 83, 0.15); color: var(--accent-green); border-left: 4px solid var(--accent-gold); }
+    .menu-item:hover { background-color: #F8F9FA; color: var(--accent-green); }
+    
+    .gateway-status { 
+      margin-top: auto; padding: 15px; background-color: var(--bg-main); 
+      border-radius: 8px; font-size: 12px; border: 1px solid var(--border-color); 
+    }
+    .status-dot { display: inline-block; width: 8px; height: 8px; background-color: #759B42; border-radius: 50%; margin-right: 5px; }
+
+    /* --- KONTEN UTAMA --- */
+    .main-content { flex: 1; padding: 30px; display: flex; flex-direction: column; gap: 30px; }
+    
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+    .header h3 { color: var(--text-main); font-weight: 600; }
+    .user-profile { width: 40px; height: 40px; background-color: var(--bg-card); border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05);}
+
+    .section-title { font-size: 18px; font-weight: 600; color: var(--text-main); }
+    
+    /* BADGE FASE TANAM */
+    .phase-badge { background-color: var(--accent-green); color: white; padding: 6px 18px; border-radius: 30px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(41, 87, 48, 0.2); }
+
+    /* --- PENGATURAN VIEW & TAB LOGIC --- */
+    .view-section { display: none; animation: fadeIn 0.4s ease-in-out; }
+    .view-section.active { display: block; }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* GRID KARTU DASHBOARD */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px; }
+    .card { padding: 20px; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 15px rgba(36, 77, 42, 0.08); color: white; }
+    .card i { font-size: 24px; margin-bottom: 10px; opacity: 0.9; }
+    .card-title { font-size: 13px; font-weight: 500; opacity: 0.9; margin-bottom: 5px; }
+    .card-value { font-size: 28px; font-weight: 700; }
+    .card-unit { font-size: 14px; font-weight: 400; opacity: 0.8; }
+    .bg-dark-green { background: var(--grad-dark-green); }
+    .bg-light-green { background: var(--grad-light-green); }
+    .bg-gold { background: var(--grad-gold); }
+    .bg-blue { background: var(--grad-blue); }
+    .bg-brown { background: var(--grad-brown); }
+    .bg-purple { background: var(--grad-purple); }
+
+    /* BAWAH: LOG & STATUS */
+    .bottom-section { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    .log-box { background: var(--bg-card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(36, 77, 42, 0.05); border: 1px solid var(--border-color); }
+    .log-list { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
+    .log-item { display: flex; gap: 15px; align-items: flex-start; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+    .log-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .log-item i.success { color: #759B42; }
+    .log-item i.warning { color: #C2A753; }
+    .log-time { font-size: 11px; color: var(--text-muted); display: block; margin-top: 3px; }
+
+    .status-box-container { display: flex; flex-direction: column; gap: 20px; }
+    .status-card { background: var(--bg-card); padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(36, 77, 42, 0.05); border: 1px solid var(--border-color); }
+    .status-card i { font-size: 26px; color: var(--accent-green); background: rgba(36, 77, 42, 0.1); padding: 15px; border-radius: 10px; }
+    .status-card-info h4 { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 500;}
+    .status-card-info span { font-size: 20px; font-weight: 700; color: var(--text-main); }
+
+    /* --- STYLE NOTIFIKASI --- */
+    .notif-card { background: var(--bg-card); padding: 18px 20px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid var(--accent-gold); box-shadow: 0 2px 10px rgba(36, 77, 42, 0.05); border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);}
+    .notif-card.alert { border-left-color: #D9534F; }
+    .notif-card.info { border-left-color: #3A7CA5; }
+    .notif-title { font-weight: 600; font-size: 15px; color: var(--text-main); margin-bottom: 5px; display: flex; align-items: center; gap: 8px;}
+    .notif-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .notif-time { font-size: 11px; color: #999; display: block; margin-top: 8px; font-weight: 500; }
+
+    /* --- STYLE PENGATURAN --- */
+    .settings-group { background: var(--bg-card); padding: 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(36, 77, 42, 0.03); }
+    .settings-group h4 { color: var(--text-main); margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; font-size: 16px; }
+    
+    .radio-option { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 18px; cursor: pointer; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; transition: 0.2s; }
+    .radio-option:hover { background-color: #F8F9FA; }
+    .radio-option input { margin-top: 4px; cursor: pointer; transform: scale(1.2); accent-color: var(--accent-green); }
+    .radio-label { font-weight: 600; color: var(--accent-green); margin-bottom: 4px; }
+    .radio-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+
+    .select-input { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border-color); font-family: 'Poppins', sans-serif; color: var(--text-main); background: #faf8f2; margin-top: 10px; font-size: 14px; outline: none; cursor: pointer; }
+    .select-input:focus { border-color: var(--accent-gold); }
+
+    .btn-save { background: var(--accent-green); color: white; border: none; padding: 14px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; font-size: 14px; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(41, 87, 48, 0.2); }
+    .btn-save:hover { background: #18331B; transform: translateY(-2px); }
+
+    /* RESPONSIVE UNTUK HP */
+    @media (max-width: 768px) {
+      body { flex-direction: column; }
+      .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); padding: 15px; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+      .logo-area { margin-bottom: 0; }
+      .menu { flex-direction: row; gap: 10px; width: 100%; margin-top: 15px; overflow-x: auto; }
+      .gateway-status { display: none; }
+      .bottom-section { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-area">AQUORYZA</div>
+    <div class="menu">
+      <div class="menu-item active" onclick="switchView('dashboard', this)"><i class="fa-solid fa-house"></i> Dashboard</div>
+      <div class="menu-item" onclick="switchView('notifikasi', this)"><i class="fa-regular fa-bell"></i> Notifikasi</div>
+      <div class="menu-item" onclick="switchView('pengaturan', this)"><i class="fa-solid fa-gear"></i> Pengaturan</div>
+    </div>
+    <div class="gateway-status">
+      <span class="status-dot" style="background-color: #D9534F;"></span> Gateway Status<br>
+      <strong>Tidak Terhubung</strong>
+    </div>
+  </aside>
+
+  <!-- KONTEN UTAMA -->
+  <main class="main-content">
+    <header class="header">
+      <h3 id="header-title">Monitoring Real-Time</h3>
+      <div class="user-profile"><i class="fa-regular fa-user" style="color: var(--accent-green);"></i></div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- 1. VIEW DASHBOARD                          -->
+    <!-- ========================================== -->
+    <div id="view-dashboard" class="view-section active">
+        
+        <!-- NODE RAKIT -->
+        <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <h2 class="section-title" style="margin-bottom: 0;">Node Rakit</h2>
+            <div class="phase-badge" id="badge-fase-tanam">
+                Fase Vegetatif
+            </div>
+        </div>
+        
+        <div class="card-grid">
+            <div class="card bg-dark-green">
+            <i class="fa-solid fa-seedling"></i>
+            <div class="card-title">Nutrisi Tanaman</div>
+            <div class="card-value"><span id="val-rakit-tds">--</span> <span class="card-unit">ppm</span></div>
+            </div>
+            <div class="card bg-light-green">
+            <i class="fa-solid fa-vial"></i>
+            <div class="card-title">pH Media Tanam</div>
+            <div class="card-value"><span id="val-rakit-ph">--</span> <span class="card-unit">pH</span></div>
+            </div>
+        </div>
+        </section>
+
+        <!-- NODE TANGKI -->
+        <section>
+        <h2 class="section-title" style="margin-bottom: 15px;">Node Tangki</h2>
+        <div class="card-grid">
+            <div class="card bg-brown">
+            <i class="fa-solid fa-fill-drip"></i>
+            <div class="card-title">Volume Tangki Silikat</div>
+            <div class="card-value"><span id="val-tangki-silikat">--</span> <span class="card-unit">%</span></div>
+            </div>
+            <div class="card bg-light-green">
+            <i class="fa-solid fa-leaf"></i>
+            <div class="card-title">Volume Tangki NPK</div>
+            <div class="card-value"><span id="val-tangki-npk">--</span> <span class="card-unit">%</span></div>
+            </div>
+            <div class="card bg-dark-green">
+            <i class="fa-solid fa-flask"></i>
+            <div class="card-title">Nutrisi Dalam Tangki</div>
+            <div class="card-value"><span id="val-tangki-tds">--</span> <span class="card-unit">ppm</span></div>
+            </div>
+            <div class="card bg-purple">
+            <i class="fa-solid fa-vial-circle-check"></i>
+            <div class="card-title">pH Dalam Tangki</div>
+            <div class="card-value"><span id="val-tangki-ph">--</span> <span class="card-unit">pH</span></div>
+            </div>
+        </div>
+        </section>
+
+        <!-- LOG & STATUS -->
+        <section class="bottom-section">
+        <div class="log-box">
+            <h2 class="section-title" style="margin-bottom: 15px;">LOG AKTIVITAS</h2>
+            <div class="log-list">
+            <div class="log-item">
+                <i class="fa-solid fa-circle-check success"></i>
+                <div>
+                <strong>Fertigasi Selesai, Pompa Fertigasi Dimatikan</strong>
+                <span class="log-time">11:00 • Otomatis</span>
+                </div>
+            </div>
+            <div class="log-item">
+                <i class="fa-solid fa-triangle-exclamation warning"></i>
+                <div>
+                <strong>pH Terdeteksi Rendah, Pompa Fertigasi Diaktifkan</strong>
+                <span class="log-time">12:25 • Otomatis</span>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="status-box-container">
+            <div class="status-card">
+            <i class="fa-solid fa-water"></i>
+            <div class="status-card-info">
+                <h4>Status Pompa</h4>
+                <span id="status-pompa">Mati</span>
+            </div>
+            </div>
+        </div>
+        </section>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. VIEW NOTIFIKASI                         -->
+    <!-- ========================================== -->
+    <div id="view-notifikasi" class="view-section">
+        <h2 class="section-title">Pusat Notifikasi</h2>
+        
+        <div class="notif-card alert">
+            <div class="notif-title"><i class="fa-solid fa-triangle-exclamation" style="color: #D9534F;"></i> Peringatan: pH Air Rendah</div>
+            <div class="notif-desc">Keseimbangan pH air di Node Rakit terdeteksi pada angka 5.2. Pompa penyeimbang telah diaktifkan otomatis untuk mengembalikan ke tingkat normal.</div>
+            <span class="notif-time">Hari ini, 12:25 WIB</span>
+        </div>
+
+        <div class="notif-card info">
+            <div class="notif-title"><i class="fa-solid fa-circle-info" style="color: #3A7CA5;"></i> Perubahan Mode Operasi</div>
+            <div class="notif-desc">Sistem AQUORYZA telah dipindahkan ke "Mode Sleep". Pembacaan sensor akan dilakukan setiap 6 jam sekali.</div>
+            <span class="notif-time">Kemarin, 18:00 WIB</span>
+        </div>
+
+        <div class="notif-card">
+            <div class="notif-title"><i class="fa-solid fa-droplet" style="color: var(--accent-gold);"></i> Tangki NPK Hampir Habis</div>
+            <div class="notif-desc">Volume tangki NPK saat ini berada di 19%. Mohon segera lakukan pengisian ulang tangki nutrisi.</div>
+            <span class="notif-time">18 Agustus 2026, 09:15 WIB</span>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 3. VIEW PENGATURAN                         -->
+    <!-- ========================================== -->
+    <div id="view-pengaturan" class="view-section">
+        <h2 class="section-title">Pengaturan Sistem</h2>
+
+        <div class="settings-group">
+            <h4>Mode Operasi Sensor</h4>
+            
+            <label class="radio-option">
+                <input type="radio" name="mode_operasi" value="aktif" checked>
+                <div>
+                    <div class="radio-label">Mode Aktif</div>
+                    <div class="radio-desc">Sensor aktif 24 jam. Evaluasi nutrisi dan pengiriman data dilakukan secara real-time terus menerus.</div>
+                </div>
+            </label>
+
+            <label class="radio-option">
+                <input type="radio" name="mode_operasi" value="sleep">
+                <div>
+                    <div class="radio-label">Mode Sleep (Hemat Daya)</div>
+                    <div class="radio-desc">Sensor membaca tiap 6 jam sekali. Sangat direkomendasikan jika kondisi lingkungan sudah stabil.</div>
+                </div>
+            </label>
+        </div>
+
+        <div class="settings-group">
+            <h4>Dosing Pemupukan (Fase Padi)</h4>
+            <p class="radio-desc" style="margin-bottom: 12px;">Pilih fase pertumbuhan padi saat ini. Sistem akan otomatis menyesuaikan ambang batas (target ppm) pada pompa pupuk di Node Rakit.</p>
+            
+            <select class="select-input" id="fase-padi">
+                <option value="Vegetatif">Fase Vegetatif — Target TDS: 800 - 1000 ppm</option>
+                <option value="Generatif">Fase Generatif — Target TDS: 1000 - 1200 ppm</option>
+                <option value="Pengisian Bulir">Fase Pengisian Bulir — Target TDS: 1200 - 1400 ppm</option>
+            </select>
+        </div>
+
+        <button class="btn-save" onclick="simpanPengaturan()">
+            <i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan
+        </button>
+    </div>
+
+  </main>
+
+  <!-- LOGIKA FIREBASE & UI -->
+  <script>
+    // --- 1. Logika Tab Menu (Pindah Halaman) ---
+    function switchView(viewId, element) {
+        document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-' + viewId).classList.add('active');
+
+        const titles = {
+            'dashboard': 'Monitoring Real-Time',
+            'notifikasi': 'Pusat Notifikasi',
+            'pengaturan': 'Pengaturan Alat'
+        };
+        document.getElementById('header-title').innerText = titles[viewId];
+    }
+
+    // --- 2. Logika Simpan Pengaturan ---
+    function simpanPengaturan() {
+        const tombolSave = document.querySelector('.btn-save');
+        const teksAsli = tombolSave.innerHTML;
+        const pilihanFase = document.getElementById('fase-padi').value;
+        const badgeFase = document.getElementById('badge-fase-tanam');
+        
+        tombolSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+        tombolSave.style.backgroundColor = '#728775';
+        
+        setTimeout(() => {
+            tombolSave.innerHTML = '<i class="fa-solid fa-check"></i> Tersimpan!';
+            tombolSave.style.backgroundColor = '#759B42'; 
+            
+            // Mengubah text badge di dashboard otomatis sesuai pilihan yang disimpan (tanpa ikon)
+            badgeFase.innerHTML = `Fase ${pilihanFase}`;
+            
+            setTimeout(() => {
+                tombolSave.innerHTML = teksAsli;
+                tombolSave.style.backgroundColor = 'var(--accent-green)';
+            }, 2000);
+        }, 1000);
+    }
+
+    // --- 3. FIREBASE LOGIC ---
+    // Konfigurasi Database Firebase yang baru dimasukkan
+    const firebaseConfig = {
+      apiKey: "AIzaSyDj_qqT5-l_LGqlFozUf71gRKUCiVdmDCY",
+      databaseURL: "https://aquoryza-d7e12-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const elRakitTDS = document.getElementById('val-rakit-tds');
+    const elRakitPH = document.getElementById('val-rakit-ph');
+    const elStatusPompa = document.getElementById('status-pompa');
+
+    // Baca Data Real-time dari Firebase
+    database.ref('/AQUORYZA/TDS').on('value', (snapshot) => {
+      if (snapshot.exists()) {
+        const val = snapshot.val();
+        elRakitTDS.innerText = val;
+        
+        // Ubah teks status pompa jika nilai TDS rendah (asumsi batas minimal 800)
+        if(val < 800) {
+          elStatusPompa.innerText = "Menyala (Pupuk)";
+          elStatusPompa.style.color = "#D9534F"; 
+        } else {
+          elStatusPompa.innerText = "Mati";
+          elStatusPompa.style.color = "var(--text-main)"; 
+        }
+      }
+    });
+
+    database.ref('/AQUORYZA/pH').on('value', (snapshot) => {
+      if (snapshot.exists()) {
+        const val = snapshot.val();
+        elRakitPH.innerText = val.toFixed(1);
+      }
+    });
+  </script>
+</body>
+</html>
