@@ -243,6 +243,7 @@
         <div class="log-box">
             <h2 class="section-title" style="margin-bottom: 15px;">LOG AKTIVITAS</h2>
             <div class="log-list">
+            <!-- Logika diperbaiki: Yang paling baru di atas, dan pH memicu Pompa pH, Nutrisi memicu Pompa Nutrisi -->
             <div class="log-item">
                 <i class="fa-solid fa-circle-check success"></i>
                 <div>
@@ -261,14 +262,14 @@
                 <i class="fa-solid fa-circle-check success"></i>
                 <div>
                 <strong>Fertigasi Selesai, Pompa Nutrisi Dimatikan</strong>
-                <span class="log-time">Kemarin, 16:30 • Otomatis</span>
+                <span class="log-time">Kemarin, 11:00 • Otomatis</span>
                 </div>
             </div>
             <div class="log-item">
                 <i class="fa-solid fa-triangle-exclamation warning"></i>
                 <div>
                 <strong>Nutrisi Terdeteksi Rendah (835 ppm), Pompa Nutrisi Diaktifkan</strong>
-                <span class="log-time">Kemarin, 16:00 • Otomatis</span>
+                <span class="log-time">Kemarin, 10:30 • Otomatis</span>
                 </div>
             </div>
             </div>
@@ -292,6 +293,8 @@
     <div id="view-notifikasi" class="view-section">
         <h2 class="section-title">Pusat Notifikasi</h2>
 
+        <!-- Tepat 7 Notifikasi sesuai urutan kronologis Log Aktivitas -->
+        
         <div class="notif-card success">
             <div class="notif-title"><i class="fa-solid fa-check-circle" style="color: #759B42;"></i> Penyeimbangan pH Berhasil</div>
             <div class="notif-desc">Pompa pH telah selesai beroperasi dan dimatikan. Nilai pH Node Rakit saat ini stabil di angka 6.3.</div>
@@ -306,14 +309,14 @@
 
         <div class="notif-card success">
             <div class="notif-title"><i class="fa-solid fa-check-circle" style="color: #759B42;"></i> Pemompaan Nutrisi Selesai</div>
-            <div class="notif-desc">Pompa nutrisi telah dimatikan. Distribusi NPK ke Node Rakit selesai dilakukan dan nilai kembali optimal di angka 968 ppm.</div>
-            <span class="notif-time">Kemarin, 16:30 WIB</span>
+            <div class="notif-desc">Pompa nutrisi telah dimatikan. Distribusi NPK ke Node Rakit selesai dilakukan dan nilai kembali optimal di angka 937 ppm.</div>
+            <span class="notif-time">Kemarin, 11:00 WIB</span>
         </div>
 
         <div class="notif-card alert">
             <div class="notif-title"><i class="fa-solid fa-triangle-exclamation" style="color: #D9534F;"></i> Peringatan: Nutrisi Tanaman Rendah</div>
             <div class="notif-desc">Nilai nutrisi (TDS) terdeteksi di angka 835 ppm. Pompa nutrisi segera diaktifkan untuk mencapai ambang batas target 850 ppm.</div>
-            <span class="notif-time">Kemarin, 16:00 WIB</span>
+            <span class="notif-time">Kemarin, 10:30 WIB</span>
         </div>
 
         <div class="notif-card alert">
