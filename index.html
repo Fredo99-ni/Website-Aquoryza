@@ -201,12 +201,12 @@
             <div class="card bg-dark-green">
             <i class="fa-solid fa-seedling"></i>
             <div class="card-title">Nutrisi Tanaman</div>
-            <div class="card-value"><span id="val-rakit-tds">937</span> <span class="card-unit">ppm</span></div>
+            <div class="card-value"><span id="val-rakit-tds">934</span> <span class="card-unit">ppm</span></div>
             </div>
             <div class="card bg-light-green">
             <i class="fa-solid fa-vial"></i>
             <div class="card-title">pH Media Tanam</div>
-            <div class="card-value"><span id="val-rakit-ph">6,3</span> <span class="card-unit">pH</span></div>
+            <div class="card-value"><span id="val-rakit-ph">6,4</span> <span class="card-unit">pH</span></div>
             </div>
         </div>
         </section>
@@ -243,19 +243,19 @@
         <div class="log-box">
             <h2 class="section-title" style="margin-bottom: 15px;">LOG AKTIVITAS</h2>
             <div class="log-list">
-            <!-- Logika diperbaiki: Yang paling baru di atas, dan pH memicu Pompa pH, Nutrisi memicu Pompa Nutrisi -->
+            <!-- Log aktivitas disinkronkan dengan Pusat Notifikasi (urutan & tanggal sama) -->
             <div class="log-item">
                 <i class="fa-solid fa-circle-check success"></i>
                 <div>
                 <strong>Penyeimbangan pH Selesai, Pompa pH Dimatikan</strong>
-                <span class="log-time">Hari ini, 12:45 • Otomatis</span>
+                <span class="log-time">Kemarin, 12:45 • Otomatis</span>
                 </div>
             </div>
             <div class="log-item">
                 <i class="fa-solid fa-triangle-exclamation warning"></i>
                 <div>
                 <strong>pH Terdeteksi Rendah (5.3), Pompa pH Diaktifkan</strong>
-                <span class="log-time">Hari ini, 12:25 • Otomatis</span>
+                <span class="log-time">Kemarin, 12:25 • Otomatis</span>
                 </div>
             </div>
             <div class="log-item">
@@ -270,6 +270,27 @@
                 <div>
                 <strong>Nutrisi Terdeteksi Rendah (835 ppm), Pompa Nutrisi Diaktifkan</strong>
                 <span class="log-time">Kemarin, 10:30 • Otomatis</span>
+                </div>
+            </div>
+            <div class="log-item">
+                <i class="fa-solid fa-triangle-exclamation warning"></i>
+                <div>
+                <strong>Tegangan Baterai Cadangan Lemah, Beralih ke Daya Utama</strong>
+                <span class="log-time">10 September 2026, 21:40 • Otomatis</span>
+                </div>
+            </div>
+            <div class="log-item">
+                <i class="fa-solid fa-circle-check success"></i>
+                <div>
+                <strong>Fertigasi Selesai, Pompa Nutrisi Dimatikan</strong>
+                <span class="log-time">5 September 2026, 14:45 • Otomatis</span>
+                </div>
+            </div>
+            <div class="log-item">
+                <i class="fa-solid fa-triangle-exclamation warning"></i>
+                <div>
+                <strong>Nutrisi Terdeteksi Rendah (842 ppm), Pompa Nutrisi Diaktifkan</strong>
+                <span class="log-time">Kemarin, 14:20 • Otomatis</span>
                 </div>
             </div>
             </div>
@@ -297,19 +318,19 @@
         
         <div class="notif-card success">
             <div class="notif-title"><i class="fa-solid fa-check-circle" style="color: #759B42;"></i> Penyeimbangan pH Berhasil</div>
-            <div class="notif-desc">Pompa pH telah selesai beroperasi dan dimatikan. Nilai pH Node Rakit saat ini stabil di angka 6.3.</div>
-            <span class="notif-time">Hari ini, 12:45 WIB</span>
+            <div class="notif-desc">Pompa pH telah selesai beroperasi dan dimatikan. Nilai pH Node Rakit saat ini stabil di angka 6.6.</div>
+            <span class="notif-time">Kemarin, 12:45 WIB</span>
         </div>
 
         <div class="notif-card alert">
             <div class="notif-title"><i class="fa-solid fa-triangle-exclamation" style="color: #D9534F;"></i> Peringatan: pH Media Tanam Turun</div>
             <div class="notif-desc">Keseimbangan pH air di Node Rakit terdeteksi menurun hingga 5.3 (Ambang batas 5.5). Pompa pH otomatis diaktifkan untuk menaikkan pH.</div>
-            <span class="notif-time">Hari ini, 12:25 WIB</span>
+            <span class="notif-time">Kemarin, 12:25 WIB</span>
         </div>
 
         <div class="notif-card success">
             <div class="notif-title"><i class="fa-solid fa-check-circle" style="color: #759B42;"></i> Pemompaan Nutrisi Selesai</div>
-            <div class="notif-desc">Pompa nutrisi telah dimatikan. Distribusi NPK ke Node Rakit selesai dilakukan dan nilai kembali optimal di angka 937 ppm.</div>
+            <div class="notif-desc">Pompa nutrisi telah dimatikan. Distribusi NPK ke Node Rakit selesai dilakukan dan nilai kembali optimal di angka 967 ppm.</div>
             <span class="notif-time">Kemarin, 11:00 WIB</span>
         </div>
 
@@ -334,7 +355,7 @@
         <div class="notif-card alert">
             <div class="notif-title"><i class="fa-solid fa-triangle-exclamation" style="color: #D9534F;"></i> Peringatan: Nutrisi Tanaman Rendah</div>
             <div class="notif-desc">Nilai nutrisi (TDS) terdeteksi menurun ke angka 842 ppm. Pompa nutrisi otomatis diaktifkan untuk mencapai target 850 ppm.</div>
-            <span class="notif-time">5 September 2026, 14:20 WIB</span>
+            <span class="notif-time">Kemarin, 14:20 WIB</span>
         </div>
     </div>
 
