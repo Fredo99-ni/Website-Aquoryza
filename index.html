@@ -128,7 +128,7 @@
     .notif-card { background: var(--bg-card); padding: 18px 20px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid var(--accent-gold); box-shadow: 0 2px 10px rgba(36, 77, 42, 0.05); border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);}
     .notif-card.alert { border-left-color: #D9534F; }
     .notif-card.info { border-left-color: #3A7CA5; }
-    .notif-card.success { border-left-color: #759B42; } /* Style untuk notif sukses */
+    .notif-card.success { border-left-color: #759B42; }
     .notif-title { font-weight: 600; font-size: 15px; color: var(--text-main); margin-bottom: 5px; display: flex; align-items: center; gap: 8px;}
     .notif-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
     .notif-time { font-size: 11px; color: #999; display: block; margin-top: 8px; font-weight: 500; }
@@ -280,32 +280,44 @@
 
         <div class="notif-card success">
             <div class="notif-title"><i class="fa-solid fa-check-circle" style="color: #759B42;"></i> Pemompaan Nutrisi Selesai</div>
-            <div class="notif-desc">Pemompaan nutrisi (NPK dan Silikat) ke Node Rakit telah berhasil diselesaikan hingga mencapai target PPM yang ditetapkan.</div>
+            <div class="notif-desc">Pompa fertigasi NPK telah dimatikan. Distribusi nutrisi ke Node Rakit selesai dilakukan dan nilai kembali optimal.</div>
             <span class="notif-time">Kemarin, 08:30 WIB</span>
-        </div>
-        
-        <div class="notif-card info">
-            <div class="notif-title"><i class="fa-solid fa-circle-info" style="color: #3A7CA5;"></i> Kalibrasi Sensor Otomatis</div>
-            <div class="notif-desc">Sensor pH dan TDS pada Node Rakit dan Tangki telah berhasil dikalibrasi secara otomatis untuk memastikan keakuratan pembacaan.</div>
-            <span class="notif-time">10 September 2026, 14:15 WIB</span>
-        </div>
-
-        <div class="notif-card">
-            <div class="notif-title"><i class="fa-solid fa-droplet" style="color: var(--accent-gold);"></i> Pengisian Ulang Tangki Silikat</div>
-            <div class="notif-desc">Volume tangki silikat telah diisi ulang oleh operator dan sekarang berada pada kapasitas optimal (92%).</div>
-            <span class="notif-time">7 September 2026, 10:00 WIB</span>
         </div>
 
         <div class="notif-card alert">
-            <div class="notif-title"><i class="fa-solid fa-triangle-exclamation" style="color: #D9534F;"></i> Peringatan Sistem: Tegangan Baterai Lemah</div>
+            <div class="notif-title"><i class="fa-solid fa-triangle-exclamation" style="color: #D9534F;"></i> Peringatan: pH Media Tanam Turun</div>
+            <div class="notif-desc">Keseimbangan pH air di Node Rakit terdeteksi menurun hingga 5.4. Sistem sedang melakukan penyesuaian otomatis.</div>
+            <span class="notif-time">11 September 2026, 14:20 WIB</span>
+        </div>
+
+        <div class="notif-card success">
+            <div class="notif-title"><i class="fa-solid fa-check-circle" style="color: #759B42;"></i> Penyeimbangan pH Berhasil</div>
+            <div class="notif-desc">Pompa penyeimbang telah selesai beroperasi. Nilai pH Node Rakit saat ini stabil di angka 6.5.</div>
+            <span class="notif-time">11 September 2026, 14:45 WIB</span>
+        </div>
+
+        <div class="notif-card alert">
+            <div class="notif-title"><i class="fa-solid fa-triangle-exclamation" style="color: #D9534F;"></i> Peringatan: Nutrisi Tanaman Rendah</div>
+            <div class="notif-desc">Nilai nutrisi (TDS) terdeteksi di bawah ambang batas fase vegetatif (780 ppm). Pompa fertigasi segera diaktifkan.</div>
+            <span class="notif-time">8 September 2026, 07:10 WIB</span>
+        </div>
+
+        <div class="notif-card success">
+            <div class="notif-title"><i class="fa-solid fa-check-circle" style="color: #759B42;"></i> Pemompaan Nutrisi Selesai</div>
+            <div class="notif-desc">Pemompaan nutrisi telah berhasil diselesaikan. Nutrisi tanaman kembali pada angka 950 ppm.</div>
+            <span class="notif-time">8 September 2026, 07:45 WIB</span>
+        </div>
+
+        <div class="notif-card alert">
+            <div class="notif-title"><i class="fa-solid fa-battery-quarter" style="color: #D9534F;"></i> Peringatan Sistem: Tegangan Baterai Lemah</div>
             <div class="notif-desc">Baterai cadangan untuk modul Node Tangki sempat menurun di bawah 15%. Sistem otomatis beralih ke daya utama.</div>
             <span class="notif-time">3 September 2026, 21:40 WIB</span>
         </div>
 
-        <div class="notif-card info">
-            <div class="notif-title"><i class="fa-solid fa-power-off" style="color: var(--text-muted);"></i> Pemeliharaan Sistem & Restart</div>
-            <div class="notif-desc">Sistem AQUORYZA telah dihidupkan ulang dengan sukses setelah proses pembersihan rutin pada pipa sirkulasi utama.</div>
-            <span class="notif-time">1 September 2026, 06:00 WIB</span>
+        <div class="notif-card alert">
+            <div class="notif-title"><i class="fa-solid fa-triangle-exclamation" style="color: #D9534F;"></i> Peringatan: Nutrisi Tanaman Rendah</div>
+            <div class="notif-desc">Pembacaan sensor TDS menunjukkan angka 795 ppm. Memulai proses fertigasi otomatis dari tangki penyimpan.</div>
+            <span class="notif-time">1 September 2026, 09:15 WIB</span>
         </div>
     </div>
 
