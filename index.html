@@ -170,8 +170,9 @@
       <div class="menu-item" onclick="switchView('pengaturan', this)"><i class="fa-solid fa-gear"></i> Pengaturan</div>
     </div>
     <div class="gateway-status">
-      <span class="status-dot" style="background-color: #D9534F;"></span> Gateway Status<br>
-      <strong>Tidak Terhubung</strong>
+      <!-- Diubah menjadi hijau dan Terhubung -->
+      <span class="status-dot" style="background-color: #759B42;"></span> Gateway Status<br>
+      <strong>Terhubung</strong>
     </div>
   </aside>
 
@@ -200,12 +201,12 @@
             <div class="card bg-dark-green">
             <i class="fa-solid fa-seedling"></i>
             <div class="card-title">Nutrisi Tanaman</div>
-            <div class="card-value"><span id="val-rakit-tds">--</span> <span class="card-unit">ppm</span></div>
+            <div class="card-value"><span id="val-rakit-tds">937</span> <span class="card-unit">ppm</span></div>
             </div>
             <div class="card bg-light-green">
             <i class="fa-solid fa-vial"></i>
             <div class="card-title">pH Media Tanam</div>
-            <div class="card-value"><span id="val-rakit-ph">--</span> <span class="card-unit">pH</span></div>
+            <div class="card-value"><span id="val-rakit-ph">6,3</span> <span class="card-unit">pH</span></div>
             </div>
         </div>
         </section>
@@ -217,22 +218,22 @@
             <div class="card bg-brown">
             <i class="fa-solid fa-fill-drip"></i>
             <div class="card-title">Volume Tangki Silikat</div>
-            <div class="card-value"><span id="val-tangki-silikat">--</span> <span class="card-unit">%</span></div>
+            <div class="card-value"><span id="val-tangki-silikat">92</span> <span class="card-unit">%</span></div>
             </div>
             <div class="card bg-light-green">
             <i class="fa-solid fa-leaf"></i>
             <div class="card-title">Volume Tangki NPK</div>
-            <div class="card-value"><span id="val-tangki-npk">--</span> <span class="card-unit">%</span></div>
+            <div class="card-value"><span id="val-tangki-npk">86</span> <span class="card-unit">%</span></div>
             </div>
             <div class="card bg-dark-green">
             <i class="fa-solid fa-flask"></i>
             <div class="card-title">Nutrisi Dalam Tangki</div>
-            <div class="card-value"><span id="val-tangki-tds">--</span> <span class="card-unit">ppm</span></div>
+            <div class="card-value"><span id="val-tangki-tds">19879</span> <span class="card-unit">ppm</span></div>
             </div>
             <div class="card bg-purple">
             <i class="fa-solid fa-vial-circle-check"></i>
             <div class="card-title">pH Dalam Tangki</div>
-            <div class="card-value"><span id="val-tangki-ph">--</span> <span class="card-unit">pH</span></div>
+            <div class="card-value"><span id="val-tangki-ph">8,8</span> <span class="card-unit">pH</span></div>
             </div>
         </div>
         </section>
@@ -383,7 +384,7 @@
     }
 
     // --- 3. FIREBASE LOGIC ---
-    // Konfigurasi Database Firebase yang baru dimasukkan
+    /* SKRIP FIREBASE DI-COMMENT AGAR TIDAK MENIMPA DATA DUMMY
     const firebaseConfig = {
       apiKey: "AIzaSyDj_qqT5-l_LGqlFozUf71gRKUCiVdmDCY",
       databaseURL: "https://aquoryza-d7e12-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -419,6 +420,7 @@
         elRakitPH.innerText = val.toFixed(1);
       }
     });
+    */
   </script>
 </body>
 </html>
