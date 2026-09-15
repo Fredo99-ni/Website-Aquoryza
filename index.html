@@ -201,12 +201,12 @@
             <div class="card bg-dark-green">
             <i class="fa-solid fa-seedling"></i>
             <div class="card-title">Nutrisi Tanaman</div>
-            <div class="card-value"><span id="val-rakit-tds">934</span> <span class="card-unit">ppm</span></div>
+            <div class="card-value"><span id="val-rakit-tds">--</span> <span class="card-unit">ppm</span></div>
             </div>
             <div class="card bg-light-green">
             <i class="fa-solid fa-vial"></i>
             <div class="card-title">pH Media Tanam</div>
-            <div class="card-value"><span id="val-rakit-ph">6,4</span> <span class="card-unit">pH</span></div>
+            <div class="card-value"><span id="val-rakit-ph">--</span> <span class="card-unit">pH</span></div>
             </div>
         </div>
         </section>
@@ -218,22 +218,22 @@
             <div class="card bg-brown">
             <i class="fa-solid fa-fill-drip"></i>
             <div class="card-title">Volume Tangki Silikat</div>
-            <div class="card-value"><span id="val-tangki-silikat">92</span> <span class="card-unit">%</span></div>
+            <div class="card-value"><span id="val-tangki-silikat">--</span> <span class="card-unit">%</span></div>
             </div>
             <div class="card bg-light-green">
             <i class="fa-solid fa-leaf"></i>
-            <div class="card-title">Volume Tangki NPK</div>
-            <div class="card-value"><span id="val-tangki-npk">86</span> <span class="card-unit">%</span></div>
+            <div class="card-title">Volume Tangki Nutrisi</div>
+            <div class="card-value"><span id="val-tangki-npk">--</span> <span class="card-unit">%</span></div>
             </div>
             <div class="card bg-dark-green">
             <i class="fa-solid fa-flask"></i>
             <div class="card-title">Nutrisi Dalam Tangki</div>
-            <div class="card-value"><span id="val-tangki-tds">19879</span> <span class="card-unit">ppm</span></div>
+            <div class="card-value"><span id="val-tangki-tds">--</span> <span class="card-unit">ppm</span></div>
             </div>
             <div class="card bg-purple">
             <i class="fa-solid fa-vial-circle-check"></i>
             <div class="card-title">pH Dalam Tangki</div>
-            <div class="card-value"><span id="val-tangki-ph">8,8</span> <span class="card-unit">pH</span></div>
+            <div class="card-value"><span id="val-tangki-ph">--</span> <span class="card-unit">pH</span></div>
             </div>
         </div>
         </section>
@@ -444,42 +444,33 @@
         }, 1000);
     }
 
-    // --- 3. Logika Pengurangan PPM Node Rakit ---
-    setInterval(() => {
-        const modeAktif = document.querySelector('input[name="mode_operasi"]:checked').value;
-        
-        if (modeAktif === 'aktif') {
-            const elRakitTds = document.getElementById('val-rakit-tds');
-            let currentPpm = parseInt(elRakitTds.innerText);
-            
-            if (!isNaN(currentPpm) && currentPpm > 0) {
-                currentPpm -= 1;
-                elRakitTds.innerText = currentPpm;
-            }
-        }
-    }, 20000);
-
-    // --- 4. FIREBASE LOGIC ---
-    /* SKRIP FIREBASE DI-COMMENT AGAR TIDAK MENIMPA DATA DUMMY
+    // --- 3. FIREBASE LOGIC ---
+    // Inisialisasi Firebase
     const firebaseConfig = {
-      apiKey: "AIzaSyDj_qqT5-l_LGqlFozUf71gRKUCiVdmDCY",
       databaseURL: "https://aquoryza-d7e12-default-rtdb.asia-southeast1.firebasedatabase.app"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
     const database = firebase.database();
 
+    // Referensi Elemen DOM
     const elRakitTDS = document.getElementById('val-rakit-tds');
     const elRakitPH = document.getElementById('val-rakit-ph');
+    const elTangkiTDS = document.getElementById('val-tangki-tds');
+    const elTangkiPH = document.getElementById('val-tangki-ph');
+    const elTangkiNpk = document.getElementById('val-tangki-npk');
+    const elTangkiSilikat = document.getElementById('val-tangki-silikat');
     const elStatusPompa = document.getElementById('status-pompa');
 
-    // Baca Data Real-time dari Firebase
-    database.ref('/AQUORYZA/TDS').on('value', (snapshot) => {
+    // === BACA DATA NODE RAKIT ===
+    database.ref('/AQUORYZA/Node Rakit/PPM').on('value', (snapshot) => {
       if (snapshot.exists()) {
         const val = snapshot.val();
         elRakitTDS.innerText = val;
         
-        // Ubah teks status pompa jika nilai TDS rendah (asumsi batas minimal 850)
+        // Logika Status Pompa (Berdasarkan TDS Node Rakit)
         if(val < 850) {
           elStatusPompa.innerText = "Menyala (Pupuk)";
           elStatusPompa.style.color = "#D9534F"; 
@@ -490,13 +481,40 @@
       }
     });
 
-    database.ref('/AQUORYZA/pH').on('value', (snapshot) => {
+    database.ref('/AQUORYZA/Node Rakit/pH').on('value', (snapshot) => {
       if (snapshot.exists()) {
-        const val = snapshot.val();
-        elRakitPH.innerText = val.toFixed(1);
+        elRakitPH.innerText = snapshot.val();
       }
     });
-    */
+
+    // === BACA DATA NODE TANGKI ===
+    database.ref('/AQUORYZA/Node Tangki/PPM').on('value', (snapshot) => {
+      if (snapshot.exists()) {
+        elTangkiTDS.innerText = snapshot.val();
+      }
+    });
+
+    database.ref('/AQUORYZA/Node Tangki/pH').on('value', (snapshot) => {
+      if (snapshot.exists()) {
+        elTangkiPH.innerText = snapshot.val();
+      }
+    });
+
+    database.ref('/AQUORYZA/Node Tangki/Volume Tangki Nutrisi').on('value', (snapshot) => {
+      if (snapshot.exists()) {
+        // Hapus karakter "%" dan spasi jika ada di database agar UI HTML rapi
+        let valString = String(snapshot.val()).replace(/%/g, '').trim();
+        elTangkiNpk.innerText = valString;
+      }
+    });
+
+    database.ref('/AQUORYZA/Node Tangki/Volume Tangki Silikat').on('value', (snapshot) => {
+      if (snapshot.exists()) {
+        // Hapus karakter "%" dan spasi
+        let valString = String(snapshot.val()).replace(/%/g, '').trim();
+        elTangkiSilikat.innerText = valString;
+      }
+    });
   </script>
 </body>
 </html>
